@@ -19,16 +19,16 @@ exports.up = function(knex) {
             tbl.text('resource_description')
             tbl.integer('project_id')
                 .unsigned()
-                .notNullable()
+                // .notNullable()
                 .references('project.id')
-                .onDelete('CASCADE')
-                .onUpdate('CASCADE');
+                // .onDelete('CASCADE')
+                // .onUpdate('CASCADE');
             tbl.integer('task_id')
                 .unsigned()
-                .notNullable()
+                // .notNullable()
                 .references('task.id')
-                .onDelete('CASCADE')
-                .onUpdate('CASCADE');
+                // .onDelete('CASCADE')
+                // .onUpdate('CASCADE');
         })
         .createTable('tasks', tbl => {
             tbl.increments();
@@ -43,8 +43,8 @@ exports.up = function(knex) {
                 .unsigned()
                 .notNullable()
                 .references('project.id')
-                .onDelete('CASCADE')
-                .onUpdate('CASCADE')
+                // .onDelete('CASCADE')
+                // .onUpdate('CASCADE');
         })
     )
 };
