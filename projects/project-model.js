@@ -23,19 +23,28 @@ function getTasks(id) {
     .where({ project_id: id })
 };
 
-function addProject() {
-    return db('projects')
-        .insert(projectData)
+function addProject(project) {
+    return db("projects")
+    .insert(project)
+    .then((ids) => {
+      return findById(ids[0]);
+    });
 }
 
-function addResource() {
-    return db('resources')
-        .insert(resourceData)
+function addResource(resource) {
+    return db("resources")
+    .insert(resource)
+    .then((ids) => {
+      return findById(ids[0]);
+    });
 }
 
-function addTask() {
-    return db('tasks')
-        .insert(taskData)
+function addTask(task) {
+    return db("tasks")
+    .insert(task)
+    .then((ids) => {
+      return findById(ids[0]);
+    });
 }
 
 function remove(id) {
