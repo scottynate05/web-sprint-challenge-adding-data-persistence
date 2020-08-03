@@ -10,21 +10,27 @@ function getProjectById(id) {
 };
 
 function getResources(id) {
-    return db('projects as p')
-        .join('resources as r', 'r.project_id', 'p.id')
-        .select('r.id', 'r.resource_name', 'r.description')
-        .where({ project_id: id })
+    return db('resources as r')
+        // .join('projects as p', 'r.project_id', 'p.id')
+        // .select('r.id', 'r.resource_name', 'r.description')
+        // .where({ project_id: id })
 };
 
-function getTasks(id) {
-    return db('projects as p')
-    .leftJoin('tasks as t', 'p.id', 't.project_id')
-    .select('t.id, t.task_name', 'p.project_name')
-    .where({ project_id: id })
+function getTasks() {
+    return db('tasks as t')
+        .join('projects as p', 't.project_id', 'p.id')
+        .select(
+            'p.id as project_id',
+            'p.project_name',
+            'p.project_description',
+            't.task_description',
+            't.task_notes',
+            't.completed as task_completed'
+    )
 };
 
 function addProject(project) {
-    return db("projects")
+    return db('projects')
     .insert(project)
     .then((ids) => {
       return findById(ids[0]);
@@ -32,7 +38,7 @@ function addProject(project) {
 }
 
 function addResource(resource) {
-    return db("resources")
+    return db('resources')
     .insert(resource)
     .then((ids) => {
       return findById(ids[0]);
@@ -40,7 +46,7 @@ function addResource(resource) {
 }
 
 function addTask(task) {
-    return db("tasks")
+    return db('tasks')
     .insert(task)
     .then((ids) => {
       return findById(ids[0]);

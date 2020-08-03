@@ -4,7 +4,7 @@ const Projects = require('./project-model.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/projects', (req, res) => {
     Projects.getProjects()
         .then(projects => {
             res.status(200).json(projects);
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
         });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/projects/:id', (req, res) => {
     const { id } = req.params;
 
     Projects.getProjectById(id)
@@ -30,49 +30,37 @@ router.get('/:id', (req, res) => {
         });
 });
 
-router.get('/:id/resources', (req, res) => {
+router.get('/resources', (req, res) => {
     const { id } = req.params;
 
     Projects.getResources(id)
-        .then(resource => {
-            if (resource.length) {
-                res.json(resource)
-            } else {
-                res.status(404).json({
-                    message: 'Coult not find resources for that given project.'
-                })
-            }
+        .then((resource) => {
+            res.status(200).json(resource);
         })
-        .catch(err => {
+        .catch((error) => {
+            console.log(error);
             res.status(500).json({
-                message: 'Failed to get resources.',
-                err
-            })
+            message: 'Error retrieving the resource',
+            });
+        });
+    })
+
+router.get('/tasks', (req, res) => {
+    // const { id } = req.params;
+
+    Projects.getTasks()
+        .then((tasks) => {
+            res.status(200).json(tasks);
         })
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({
+            message: 'Error retrieving the tasks',
+            });
+        });
 })
 
-router.get('/:id/tasks', (req, res) => {
-    const { id } = req.params;
-
-    Projects.getTasks(id)
-        .then(task => {
-            if (task.length) {
-                res.json(task)
-            } else {
-                res.status(404).json({
-                    message: 'Coult not find tasks for that given project.'
-                })
-            }
-        })
-        .catch(err => {
-            res.status(500).json({
-                message: 'Failed to get tasks.',
-                err
-            })
-        })
-})
-
-router.post('/', (req, res) => {
+router.post('/projects', (req, res) => {
     const projectData = req.body;
 
     Projects.addProject(projectData)
@@ -86,31 +74,23 @@ router.post('/', (req, res) => {
         });
 });
 
-router.post('/:id/resources', (req, res) => {
+router.post('/resources', (req, res) => {
     const resourceData = req.body;
-    const { id } = req.params;
+    // const { id } = req.params;
 
-    Projects.getProjectById(id)
-        .then(project => {
-            if (project) {
-                Projects.addResource(resourceData, id)
-                    .then(resource => {
-                        res.status(201).json(resource)
-                    });
-            } else {
-                res.status(404).json({
-                    message: 'Could not find project with given id.'
-                });
-            }
+    Projects.addResource(resourceData)
+        .then((resource) => {
+            res.status(201).json(resource);
         })
-        .catch(err => {
+        .catch((error) => {
+            console.log(error);
             res.status(500).json({
-                message: 'Failed to create new resource.'
+            message: 'Error adding the resource',
             });
         });
 });
 
-router.post('/:id/tasks', (req, res) => {
+router.post('/tasks', (req, res) => {
     const taskData = req.body;
     const { id } = req.params;
 
@@ -134,7 +114,7 @@ router.post('/:id/tasks', (req, res) => {
         });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/projects/:id', (req, res) => {
     const { id } = req.params;
 
     Projects.remove(id)
